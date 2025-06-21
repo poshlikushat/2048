@@ -14,6 +14,7 @@ class Renderer final{
   sf::Font font_;
   std::string fontPath_;
 
+  // Tile size and padding
   const float tileSize_ = 100.f;
   const float padding_ = 0.5f;
 
