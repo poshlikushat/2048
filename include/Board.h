@@ -33,6 +33,8 @@ public:
   [[nodiscard]] bool hasMoves() const;
 
   [[nodiscard]] const std::vector<Tile>& getTiles() const;
+
+  [[nodiscard]] int getScore() const;
 };
 
 

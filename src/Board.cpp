@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cmath>
 
-Tile* Board::findTile(int x, int y) {
+Tile* Board::findTile(const int x, const int y) {
     for (auto& tile : tiles_) {
         if (tile.x == x && tile.y == y)
             return &tile;
@@ -29,7 +29,7 @@ void Board::spawnTile() {
     std::uniform_int_distribution<size_t> distPos(0, empties.size() - 1);
     auto [x, y] = empties[distPos(rng_)];
 
-    std::uniform_int_distribution<int> distVal(1, 10);
+    std::uniform_int_distribution distVal(1, 10);
     int v = (distVal(rng_) == 1 ? 4 : 2);
 
     int color = static_cast<int>(std::log2(v)) - 1;
@@ -49,6 +49,13 @@ const std::vector<Tile>& Board::getTiles() const {
     return tiles_;
 }
 
+int Board::getScore() const {
+    int s = 0;
+    for (auto& t : tiles_)
+        s += t.value;
+    return s;
+}
+
 void Board::reset() {
     tiles_.clear();
     spawnTile();
@@ -62,19 +69,16 @@ bool Board::move(const Direction direction) {
     for (int line = 0; line < 4; ++line) {
         std::vector<Tile*> cells;
 
-        // 1) Собираем указатели на всё, что есть в этой строке/столбце
         for (int i = 0; i < 4; ++i) {
-            int x = (direction == Direction::LEFT  || direction == Direction::RIGHT) ? i    : line;
-            int y = (direction == Direction::LEFT  || direction == Direction::RIGHT) ? line : i;
+            const int x = (direction == Direction::LEFT  || direction == Direction::RIGHT) ? i    : line;
+            const int y = (direction == Direction::LEFT  || direction == Direction::RIGHT) ? line : i;
             if (auto* t = findTile(x, y))
                 cells.push_back(t);
         }
 
-        // 2) Для Right/Down реверсим порядок
         if (direction == Direction::RIGHT || direction == Direction::DOWN)
             std::reverse(cells.begin(), cells.end());
 
-        // 3) Сливаем пары
         for (std::ptrdiff_t i = 0; i + 1 < static_cast<std::ptrdiff_t>(cells.size()); ++i) {
             Tile* a = cells[i];
             Tile* b = cells[i + 1];
@@ -82,7 +86,6 @@ bool Board::move(const Direction direction) {
                 a->value *= 2;
                 a->merged = true;
 
-                // удаляем b из tiles_
                 tiles_.erase(
                     std::remove_if(
                         tiles_.begin(), tiles_.end(),
@@ -95,7 +98,6 @@ bool Board::move(const Direction direction) {
             }
         }
 
-        // 4) Сдвигаем все в начало/конец линии
         for (std::ptrdiff_t i = 0; i < static_cast<std::ptrdiff_t>(cells.size()); ++i) {
             int nx, ny;
             switch (direction) {

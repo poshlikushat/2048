@@ -24,19 +24,12 @@ sf::Color Renderer::getTextColor(int color) {
 
 void Renderer::render(const std::vector<Tile>& tiles) const {
     window_.clear(sf::Color(250, 248, 239));
-
-    const sf::Vector2u winSize = window_.getSize();
-    // Общая длина (ширина) всей сетки вместе с отступами
-    const float totalGrid = static_cast<float>(gridSize_) * tileSize_
-                    + (static_cast<float>(gridSize_) + 1) * padding_;
-    // Смещение по X и по Y — разница окна и сетки пополам
-    const float offsetX = (static_cast<float>(winSize.x) - totalGrid) / 2.f;
-    const float offsetY = (static_cast<float>(winSize.y) - totalGrid) / 2.f;
-
-    // 3) Рисуем пустую сетку 4×4, используя смещения offsetX/Y
+    constexpr float topPadding = 80.f;
+    constexpr float sidePadding = 5.f;
+    constexpr float offsetX = sidePadding;
+    constexpr float offsetY = topPadding;
     for (int row = 0; row < static_cast<int>(gridSize_); ++row) {
         for (int col = 0; col < static_cast<int>(gridSize_); ++col) {
-            // к старому расчёту padding_ + col*… прибавляем offset
             const float x = offsetX + padding_ + static_cast<float>(col) * (tileSize_ + padding_);
             const float y = offsetY + padding_ + static_cast<float>(row) * (tileSize_ + padding_);
 
@@ -47,12 +40,11 @@ void Renderer::render(const std::vector<Tile>& tiles) const {
         }
     }
 
-    // 4) Рисуем непустые плитки тоже с учётом offsetX/Y
     for (const auto& tile : tiles) {
         if (tile.value == 0) continue;
 
-        float x = offsetX + padding_ + static_cast<float>(tile.x) * (tileSize_ + padding_);
-        float y = offsetY + padding_ + static_cast<float>(tile.y) * (tileSize_ + padding_);
+        const float x = offsetX + padding_ + static_cast<float>(tile.x) * (tileSize_ + padding_);
+        const float y = offsetY + padding_ + static_cast<float>(tile.y) * (tileSize_ + padding_);
 
         sf::RectangleShape rect({tileSize_, tileSize_});
         rect.setPosition(sf::Vector2f(x, y));
@@ -77,11 +69,8 @@ void Renderer::render(const std::vector<Tile>& tiles) const {
 Renderer::Renderer(sf::RenderWindow& window, std::string fontPath)
  : window_(window), fontPath_(std::move(fontPath))
 {
-  // высчитываем tileSize под ширину окна
   const sf::Vector2u ws = window_.getSize();
-  // оставляем padding_ слева и справа, итого (gridSize_+1)*padding_
   const float totalPadding = (static_cast<float>(gridSize_) + 1) * padding_;
-  // делим оставшееся пространство поровну на gridSize_ клеток
   tileSize_ = (static_cast<float>(ws.x) - totalPadding) / static_cast<float>(gridSize_);
 }
 

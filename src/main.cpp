@@ -23,8 +23,7 @@ int main() {
         break;
       }
 
-      Direction dir;
-      if (GameController::handleKeyEvent(*evt, dir)) {
+      if (Direction dir; GameController::handleKeyEvent(*evt, dir)) {
         if (board.move(dir)) {
           board.spawnTile();
         }

@@ -17,7 +17,7 @@ class Renderer final{
 
   const unsigned gridSize_ = 4;
   float tileSize_;
-  const float padding_ = 0.5f;
+  const float padding_ = 1.5f;
 
   static sf::Color getTileColor(int color) ;
   static sf::Color getTextColor(int color) ;
