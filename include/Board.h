@@ -5,6 +5,8 @@
 #ifndef BOARD_H
 #define BOARD_H
 #include "Tile.h"
+#include <vector>
+#include <random>
 
 enum class Direction {
   UP,
@@ -14,19 +16,23 @@ enum class Direction {
 };
 
 class Board final{
-  Tiles tiles_;
+  std::vector<Tile> tiles_;
+  std::mt19937 rng_;
+
   void resetMergedFlags();
+  Tile* findTile(int x, int y);
 public:
   Board();
-  ~Board();
+  ~Board() = default;
 
+  void reset();
   bool move(Direction direction);
 
   void spawnTile();
 
   [[nodiscard]] bool hasMoves() const;
 
-  [[nodiscard]] const Tiles& getTiles() const;
+  [[nodiscard]] const std::vector<Tile>& getTiles() const;
 };
 
 

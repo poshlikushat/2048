@@ -1,25 +1,36 @@
 #include <SFML/Graphics.hpp>
+#include "../include/Board.h"
+#include "../include/Renderer.h"
+#include "../include/GameController.h"
 
-int main()
-{
+int main() {
   sf::RenderWindow window(
-      sf::VideoMode({200, 200}),
-      "SFML works!"
+      sf::VideoMode(sf::Vector2u{480, 600}),
+      "2048"
   );
-  sf::CircleShape shape(100.f);
-  shape.setFillColor(sf::Color::Green);
+  window.setFramerateLimit(60);
 
-  while (window.isOpen())
-  {
-    while (const std::optional<sf::Event> evt = window.pollEvent())
-    {
-      if (evt->is<sf::Event::Closed>())
+  Renderer renderer(window, "assets/fonts/Sansation-Regular.ttf");
+  if (!renderer.init())
+    return -1;
+
+  Board board;
+
+  while (window.isOpen()) {
+    while (auto evt = window.pollEvent()) {
+      if (evt->is<sf::Event::Closed>()) {
         window.close();
-    }
+        break;
+      }
 
-    window.clear();
-    window.draw(shape);
-    window.display();
+      Direction dir;
+      if (GameController::handleKeyEvent(*evt, dir)) {
+        if (board.move(dir)) {
+          board.spawnTile();
+        }
+      }
+    }
+    renderer.render(board.getTiles());
   }
 
   return 0;

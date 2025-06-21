@@ -15,6 +15,9 @@ add_executable(Game src/main.cpp
         include/Renderer.h
         include/Tile.h)
 
+file(COPY ${CMAKE_SOURCE_DIR}/assets
+        DESTINATION ${CMAKE_BINARY_DIR})
+
 target_link_libraries(Game
         PRIVATE
         SFML::System

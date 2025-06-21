@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Tile.h"
+#include "Board.h"
 
 
 class Renderer final{
@@ -14,8 +15,8 @@ class Renderer final{
   sf::Font font_;
   std::string fontPath_;
 
-  const unsigned gridSize = 4;
-  const float tileSize_ = 100.f;
+  const unsigned gridSize_ = 4;
+  float tileSize_;
   const float padding_ = 0.5f;
 
   static sf::Color getTileColor(int color) ;
@@ -25,7 +26,7 @@ public:
 
   bool init();
 
-  void render(const Tiles& tiles) const;
+  void render(const std::vector<Tile>& tiles) const;
 };
 
 

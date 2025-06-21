@@ -4,36 +4,15 @@
 
 #ifndef TILE_H
 #define TILE_H
-#include <vector>
 
+struct Tile final {
+  int x;
+  int y;
+  int value;
+  int color;
+  bool merged;
 
-class Tiles final{
-  struct Tile {
-    int x, y;
-    int value;
-    int color;
-  };
-
-  std::vector<Tile> tiles;
-
-  Tile* findTile(int x, int y);
-
-public:
-  Tiles();
-  ~Tiles();
-
- bool isEmpty();
- void addTile(int x, int y, int value, int color);
- void removeTile(int x, int y);
- void setTileValue(int value);
-
- //getters
- [[nodiscard]] int getTileValue(int x, int y) const;
- [[nodiscard]] int getTileColor(int x, int y) const;
-
- [[nodiscard]] const std::vector<Tile>& getTiles() const;
+  explicit Tile(int x_ = 0, int y_ = 0, int value_ = 0, int color_ = 0);
 };
-
-
 
 #endif //TILE_H
