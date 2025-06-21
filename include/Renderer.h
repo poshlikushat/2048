@@ -14,18 +14,18 @@ class Renderer final{
   sf::Font font_;
   std::string fontPath_;
 
-  // Tile size and padding
+  const unsigned gridSize = 4;
   const float tileSize_ = 100.f;
   const float padding_ = 0.5f;
 
-  sf::Color getTileColor(int color) const;
-  sf::Color getTextColor(int color) const;
+  static sf::Color getTileColor(int color) ;
+  static sf::Color getTextColor(int color) ;
 public:
-  Renderer(sf::RenderWindow& window, const std::string& fontPath);
+  Renderer(sf::RenderWindow& window, std::string  fontPath);
 
   bool init();
 
-  void render(const Tiles& tiles);
+  void render(const Tiles& tiles) const;
 };
 
 
